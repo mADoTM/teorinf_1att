@@ -18,7 +18,7 @@ fun main() {
     displayVariable(ansamblX, "X")
     displayVariable(ansamblY, "Y")
 
-    checkIndependent(ansamblX, ansamblY, ansambl)
+    val isIndependent = checkIndependent(ansamblX, ansamblY, ansambl)
     println()
     val conditionalX = conditionalProbabilityX(ansamblY, ansambl)
     println()
@@ -44,18 +44,22 @@ fun main() {
     println("Hx(Y)=${entropyXOnY}")
 
     println()
-    entropyFullAllVariables(entropyYOnX, entropyXOnY, entropyHNotIndexedX, entropyHNotIndexedY)
+    entropyFullAllVariables(entropyYOnX, entropyXOnY, entropyHNotIndexedX, entropyHNotIndexedY, isIndependent)
 }
 
 fun entropyFullAllVariables(
     entropyYOnX: Double,
     entropyXOnY: Double,
     entropyNotIndexedX: Double,
-    entropyNotIndexedY: Double
+    entropyNotIndexedY: Double,
+    isIndependent: Boolean
 ) {
     println("H(XY) = H(X) + Hx(Y)\t= $entropyNotIndexedX + $entropyXOnY = ${entropyNotIndexedX + entropyXOnY} = \n" +
-            "Hy(X) + H(Y)\t= $entropyYOnX + $entropyNotIndexedY = ${entropyNotIndexedY + entropyYOnX} = \n" +
-            "H(X) + H(Y)\t= $entropyNotIndexedX + $entropyNotIndexedY = ${entropyNotIndexedX + entropyNotIndexedY}")
+            "Hy(X) + H(Y)\t= $entropyYOnX + $entropyNotIndexedY = ${entropyNotIndexedY + entropyYOnX} ")
+
+    if(isIndependent) {
+        println(" = H(X) + H(Y)\t= $entropyNotIndexedX + $entropyNotIndexedY = ${entropyNotIndexedX + entropyNotIndexedY}")
+    }
 }
 
 fun entropyFullVariable(ansambl: Array<Double>, yOnXIndexed: Array<Double>): Double {
@@ -132,7 +136,7 @@ fun conditionalProbabilityY(x: Array<Double>, ansambl: Array<Array<Double>>): Ar
     return result
 }
 
-fun checkIndependent(x: Array<Double>, y: Array<Double>, ansambl: Array<Array<Double>>) {
+fun checkIndependent(x: Array<Double>, y: Array<Double>, ansambl: Array<Array<Double>>): Boolean {
     var isIndependent = true
 
     for (i in ansambl.indices) {
@@ -146,6 +150,8 @@ fun checkIndependent(x: Array<Double>, y: Array<Double>, ansambl: Array<Array<Do
     }
 
     if (isIndependent) println("Ансамбли X и Y независимы") else println("Ансамбли X и Y зависимы")
+
+    return isIndependent
 }
 
 fun displayVariable(array: Array<Double>, variable: String) {
